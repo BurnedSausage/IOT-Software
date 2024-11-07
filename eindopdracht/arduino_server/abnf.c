@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "print.h"
 
 static bool field_line(struct stream);
 static bool field_name(struct stream);
@@ -16,6 +17,7 @@ static bool request_line(struct stream);
 static bool request_target(struct stream);
 static bool start_line(struct stream);
 static bool tchar(struct stream, char[], size_t);
+static bool isTchar(struct stream);
 
 static bool readTokenType(struct stream, enum tokentype);
 static bool readTokenValue(struct stream, enum tokentype,
@@ -62,7 +64,7 @@ static bool field_line(struct stream stream) {
   if(field_name(stream)){
     //check for ::
     struct token next = peekToken(stream);
-    if(next.value[0] = ":"){
+    if(next.value[0] == ":"){
       //read SP
       while(readTokenType(stream, SP)){}
       if(field_value(stream)){
@@ -85,7 +87,7 @@ static bool field_value(struct stream stream) {
   //Char followed by any amount of SP tabs and chars stop when next is a enter
   struct token next = peekToken(stream);
   int i = 0; //this will save field value one day
-  if(next.value == VCHAR){
+  if(next.type == VCHAR){
     while(next.type == VCHAR || next.type == SP || next.type == HTAB){
       i++;
       readToken(stream);
@@ -100,12 +102,10 @@ static bool field_value(struct stream stream) {
 
 static bool http_token(struct stream stream) { //probs gonna need some pointer magic to get the values up to original caller
   //any amount of tchar
-  struct token next = peekToken(stream);
   int i = 0; //this will save the token one day
   while(isTchar(stream)){
     i++;
     readToken(stream);
-    next = peekToken(stream);
   }
   if(i != 0){
     return true;
@@ -158,6 +158,10 @@ static bool origin_form(struct stream stream) {
 
 static bool start_line(struct stream stream) {
   // Start line == requestline. If requestline == true return true else return false
+  print(peekToken(stream).value[0]);
+  readToken(stream);
+  print(peekToken(stream).value[0]);
+
   return request_line(stream);
 }
 
