@@ -114,22 +114,32 @@ static bool http_token(struct stream stream) { //probs gonna need some pointer m
 }
 
 static bool http_version(struct stream stream) {
-  //"HTTP" "/" DIGIT "." DIGIT
+  // "HTTP" "/" DIGIT "." DIGIT
+  struct token next = peekToken(stream);
+  int i = 0;
+  while(next.type != CRLF){
+    i++;
+    readToken(stream);
+    next = peekToken(stream);
+  }
+  if(i != 0){
+    return true;
+  }
   return false;
 }
 
 static bool message_body(struct stream stream) {
-  //*octet
-  return false;
+  // *octet (all the remaining data)
+  return true;
 }
 
 static bool method(struct stream stream) {
-  //HTTP token
+  // HTTP token
   return http_token(stream);
 }
 
 static bool request_line(struct stream stream) {
-  //Request line =  method SP request-target SP http-version
+  // Request line =  method SP request-target SP http-version
   if(method(stream)){
     //Check for space
     if(readTokenType(stream, SP)){
@@ -158,10 +168,6 @@ static bool origin_form(struct stream stream) {
 
 static bool start_line(struct stream stream) {
   // Start line == requestline. If requestline == true return true else return false
-  print(peekToken(stream).value[0]);
-  readToken(stream);
-  print(peekToken(stream).value[0]);
-
   return request_line(stream);
 }
 

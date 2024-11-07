@@ -7,5 +7,6 @@
 #endif
 
 EXTERNC void print(int number);
+EXTERNC void println(int number);
 
 #undef EXTERNC
