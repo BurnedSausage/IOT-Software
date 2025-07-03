@@ -2,17 +2,7 @@
 #define cserver_h
 
 #include "stream.h"
-#include <stdbool.h> // ik denk dat deze hier overbodig is
-
-
-bool handleRequest(struct stream);
-
-/*
-
-// Op moment dat je overgaat van unittests naar integratietests
-// krijgt `handleRequest` een nieuw return-type.
-// Zonder het nu te controleren, verwacht ik dat de onderstaande
-// definitie werkt.
+#include <stdbool.h>
 
 enum statuscode {
   INTERNAL_SERVER_ERROR_500, // failed to malloc cbuffers
@@ -36,8 +26,13 @@ struct response {
     double get_actual;
   };
 };
-
+// This func is for unittest
+// bool handleRequest(struct stream);
 struct response handleRequest(struct stream);
-*/
 
+int bufferFull(int buffer);
+int addValues(int sensor1, int sensor2);
+int returnBufferMode(int buffer);
+bool checkBufferInit();
+bool resetCB();
 #endif

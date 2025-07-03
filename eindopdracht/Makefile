@@ -1,4 +1,4 @@
-CFLAGS=-std=c99 -Wall -Wextra -Wconversion `pkg-config --cflags glib-2.0` -g
+CFLAGS=-std=c99 -Wall -Wextra `pkg-config --cflags glib-2.0` -g
 LDLIBS=`pkg-config --libs glib-2.0` -lm
 
 # Deze code hoort bij het laatste gedeelte van C (de parser)
@@ -45,17 +45,22 @@ LDLIBS=`pkg-config --libs glib-2.0` -lm
 # Tot slot, de eindopdracht moet worden opgeleverd zonder gecompileerde
 # bestanden.
 
+
+
 # your configuration:
-arduino_IP=10.1.200.21
-rpi_IP=10.1.200.11
+arduino_IP=10.1.1.12
+rpi_IP=10.1.1.11
 
 object_files=$(project)/cserver.o \
              $(project)/token.o \
              $(project)/abnf.o \
+			 $(project)/cbuffer.o \
+			 $(project)/calculations.o \
              buffermock.o
 
-unittest=unit_test
-# unittest=integration_test
+# unittest=unit_test
+ unittest=integration_test
+# unittest=cbuffTest
 
 # do not change:
 
@@ -87,7 +92,7 @@ check: $(unittest)
 	-./$(unittest)
 
 # bar limits check to availability, no timestamp check performed
-prepare: | $(virtualEnvironment)
+prepare:  | $(virtualEnvironment)
 
 $(virtualEnvironment):
 	python3 -m venv $(virtualEnvironment)
