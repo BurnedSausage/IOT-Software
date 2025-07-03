@@ -4,27 +4,33 @@ from sqlite3 import dbapi2 as sqlite3
 
 app = Flask(__name__)
 
-@app.route('/statistics/', methods=['GET'])
-def get_statistics():
-        statistic = retrieve_statistic()
+# @app.route('/statistics/', methods=['GET'])
+# def get_statistics():
+#         statistic = retrieve_statistic()
 
-        return statistic
+#         return statistic
 
-@app.route('/arduinos/<int:id>/measurements/', methods=['POST'])
-def post_measurements(id):
-        db = get_db()
-        cur = db.execute("insert into arduinos (id, measurement) values (?, ?)", (id, request.json.get('measurement')))
-        db.commit()
+# @app.route('/arduinos/<int:id>/measurements/', methods=['POST'])
+# def post_measurements(id):
+#         db = get_db()
+#         cur = db.execute("insert into arduinos (id, measurement) values (?, ?)", (id, request.json.get('measurement')))
+#         db.commit()
 
-        return jsonify({"result":True})
+#         return jsonify({"result":True})
 
-@app.route('/measurements/', methods=['DELETE'])
-def delete_measurements():
-        db = get_db()
-        cur = db.execute("delete from arduinos")
-        db.commit()
+# @app.route('/measurements/', methods=['DELETE'])
+# def delete_measurements():
+#         db = get_db()
+#         cur = db.execute("delete from arduinos")
+#         db.commit()
 
-        return jsonify({"result":True})
+#         return jsonify({"result":True})
+
+@app.route('/data', methods=['GET'])
+def post_data():
+        print('Received data')
+
+        return make_response(jsonify({'succes': 'succes'}), 201)
 
 @app.errorhandler(400)
 def bad_request(error):
@@ -33,6 +39,8 @@ def bad_request(error):
 @app.errorhandler(404)
 def not_found(error):
         return make_response(jsonify({'error': 'Not found'}), 404)
+
+
 
 def get_db():
         if not hasattr(g, 'sqlite_db'):
